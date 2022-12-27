@@ -8,3 +8,11 @@ layouts to try.
 Here is a scientific solution (instead of my brute-force approach):
 
 https://users.wfu.edu/masonsk/scramblesquares.pdf
+
+Frank's pieces (I numbered them on the back):
+
+![](art/IMG-1827.jpg)
+
+Here is the first solution my code found:
+
+![](art/solution.jpg)
