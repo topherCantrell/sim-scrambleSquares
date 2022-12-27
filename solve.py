@@ -95,12 +95,12 @@ solutions = []
 #TEST = [0,1,5,7,6,8,2,4,3]
 last = [1, 1, 1, 1, 1]
 total = 0
-ready = False
+# ready = False
 for c in grow([]):
-    if not ready:
-        if c != [1, 5, 7, 6, 8, 0, 4, 2, 3]:
-            continue
-        ready = True
+    # if not ready:
+    #    if c != [1, 5, 7, 6, 8, 0, 4, 2, 3]:
+    #        continue
+    #    ready = True
     logit(str(c)+' '+str(solutions))
     #c = TEST
     total += 1
