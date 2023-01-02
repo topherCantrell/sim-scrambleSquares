@@ -21,7 +21,7 @@ CHECKS = [
     '7',    '7.1+8.3',    '8',    '8.1+9.3',    '9'
 ]
 
-# Build computer-readable models
+# Computer-readable models
 
 tiles = []
 for t in TILES:
@@ -40,39 +40,26 @@ for c in CHECKS:
         checks.append((w, x, y, z))
 # print(checks)
 
-cursor = [
-    [0, 0], [1, 0], [2, 0],
-    [3, 0], [4, 0], [5, 0],
-    [6, 0], [7, 0], [8, 0],
-]
-
-total = 0
-
-
-def grow(cursor):
-    global total
-    if len(cursor) == 9:
+def get_permutations(size, cursor=None):
+    if cursor is None:
+        cursor = []    
+    if len(cursor) == size:
         yield cursor
-        total += 1
-    for i in range(9):
+    for i in range(size):
         if not i in cursor:
-            yield from grow(cursor+[i])
+            yield from get_permutations(size=size, cursor=cursor+[i])
 
-
-def check_board(board):
-    global checks
-    # print(board)
-    for ch in checks:
-        # print(ch)
+def check_board(board):    
+    for ch in checks:        
         a = board[ch[0]][0][ch[1]]
         b = board[ch[2]][0][ch[3]]
         if a == b or a.upper() != b.upper():
-            return False
-        # print('match',a,b)
+            # Stop checking with the first failure
+            return False        
+    # All checks pass ... this board is a win
     return True
 
-
-def advance(board, i=0):
+def next_rotation(board, i=0):
     if i == 9:
         return True
     board[i][1] += 1
@@ -81,8 +68,7 @@ def advance(board, i=0):
     if board[i][1] < 4:
         return False
     board[i][1] = 0
-    return advance(board, i+1)
-
+    return next_rotation(board, i+1)
 
 def logit(msg):
     with open('logs.txt', 'a') as f:
@@ -92,31 +78,28 @@ def logit(msg):
 logit('starting')
 
 solutions = []
-#TEST = [0,1,5,7,6,8,2,4,3]
-last = [1, 1, 1, 1, 1]
+SKIP_TO = [7, 5, 2, 8, 6, 1, 4, 3, 0]
 total = 0
-# ready = False
-for c in grow([]):
-    # if not ready:
-    #    if c != [1, 5, 7, 6, 8, 0, 4, 2, 3]:
-    #        continue
-    #    ready = True
+ready = False
+for c in get_permutations(9):
+    # In case we are restarting from a given point
+    if SKIP_TO and not ready:
+       if c != SKIP_TO:
+           continue
+       ready = True
+
+    print(c, solutions) 
     logit(str(c)+' '+str(solutions))
-    #c = TEST
-    total += 1
-    print(c, solutions)
-    if str(c[:5]) != str(last[:5]):
-        print(c)
-        last = list(c)
+       
     board = []
     for i in c:
         board.append([list(tiles[i]), 0])
     while True:
         if check_board(board):
             solutions.append(board)
-            print("Found solution:", board)
-            logit('Found solution: '+str(board))
-        if advance(board, 0):
+            print("Found solution:", c, board)
+            logit('Found solution: '+str(c)+' '+str(board))
+        if next_rotation(board, 0):
             break
 
 print('solutions', solutions)

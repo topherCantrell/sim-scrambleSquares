@@ -13,6 +13,7 @@ Frank's pieces (I numbered them on the back):
 
 ![](art/IMG-1827.jpg)
 
-Here is the first solution my code found:
+Below is the first solution my code found. It found four total solutions, but they
+are all rotations of the board.
 
 ![](art/solution.jpg)
